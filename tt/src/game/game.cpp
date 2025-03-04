@@ -1,11 +1,27 @@
 #include "../game/game.h"
 #include "../math/math.h"
 #include "../window/window.hpp"
+#include <vector>
+#include <string>
+#include <cstdint>
+#include <algorithm>
+#include <iostream>
+
 
 std::vector<std::string> processes = {
     "FiveM_b2802_GTAProcess.exe",
     "FiveM_b2944_GTAProcess.exe",
-    "FiveM_b3095_GTAProcess.exe"
+    "FiveM_b3095_GTAProcess.exe",
+	"FiveM_b3258_GTAProcess.exe",
+	"FiveM_b1604_GTAProcess.exe",
+	"FiveM_b3274_GTAProcess.exe",
+	"FiveM_b3323_GTAProcess.exe",
+	"FiveM_b2060_GTAProcess.exe",
+	"FiveM_b2189_GTAProcess.exe",
+	"FiveM_b2372_GTAProcess.exe",
+	"FiveM_b2545_GTAProcess.exe",
+	"FiveM_b2612_GTAProcess.exe",
+	"FiveM_b2699_GTAProcess.exe"
 };
 
 memify mem(processes);
@@ -17,30 +33,110 @@ void FiveM::Setup()
     using namespace offset;
 
     auto game_base = mem.GetBase(process_name);
-    if (process_name == "FiveM_b3095_GTAProcess.exe") {
-        world = mem.Read<uintptr_t>(game_base + 0x25B14B0); // 0x254d448
-        replay = mem.Read<uintptr_t>(game_base + 0x1FBD4F0); // 0X1F5B820
-        viewport = mem.Read<uintptr_t>(game_base + 0x201DBA0); // 0x1FBC100
-        localplayer = mem.Read<uintptr_t>(world + 0x8);
+	if (process_name == "FiveM_b1604_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x247F840);
+		replay = mem.Read<uintptr_t>(game_base + 0x1EFD4C8);
+		viewport = mem.Read<uintptr_t>(game_base + 0x2087780);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
 
-        playerInfo = 0x10A8;
-    }
-    if (process_name == "FiveM_b2944_GTAProcess.exe") {
-        world = mem.Read<uintptr_t>(game_base + 0x257BEA0);
-        replay = mem.Read<uintptr_t>(game_base + 0x1F42068);
-        viewport = mem.Read<uintptr_t>(game_base + 0x1FEAAC0);
-        localplayer = mem.Read<uintptr_t>(world + 0x8);
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2060_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x24C8858);
+		replay = mem.Read<uintptr_t>(game_base + 0x1EC3828);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1F6A7E0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
 
-        playerInfo = 0x10A8; // 0x10C8
-    }
-    if (process_name == "FiveM_b2802_GTAProcess.exe") {
-        world = mem.Read<uintptr_t>(game_base + 0x2593320);
-        replay = mem.Read<uintptr_t>(game_base + 0x1F58B58);
-        viewport = mem.Read<uintptr_t>(game_base + 0x20019E0);
-        localplayer = mem.Read<uintptr_t>(world + 0x8);
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2189_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x24E6D90);
+		replay = mem.Read<uintptr_t>(game_base + 0x1EE18A8);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1F888C0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
 
-        playerInfo = 0x10A8;
-    }
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2372_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x252DCD8);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F05208);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1F9E9F0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2545_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x25667E8);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F2E7A8);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1FD6F70);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2612_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x2567DB0);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F77EF0);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1FD8570);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2699_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x26684D8);
+		replay = mem.Read<uintptr_t>(game_base + 0x20304C8);
+		viewport = mem.Read<uintptr_t>(game_base + 0x20D8C90);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2802_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x2593320);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F58B58);
+		viewport = mem.Read<uintptr_t>(game_base + 0x20019E0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b2944_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x257BEA0);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F42068);
+		viewport = mem.Read<uintptr_t>(game_base + 0x1FEAAC0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8; // 0x10C8 // 0x10B8
+	}
+	if (process_name == "FiveM_b3095_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x25B14B0);
+		replay = mem.Read<uintptr_t>(game_base + 0x1FBD4F0);
+		viewport = mem.Read<uintptr_t>(game_base + 0x201DBA0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b3258_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x25B14B0);
+		replay = mem.Read<uintptr_t>(game_base + 0x1FBD4F0);
+		viewport = mem.Read<uintptr_t>(game_base + 0x201DBA0);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b3274_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x25B24D8);
+		replay = mem.Read<uintptr_t>(game_base + 0x1F76428);
+		viewport = mem.Read<uintptr_t>(game_base + 0x201EC20);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
+	if (process_name == "FiveM_b3323_GTAProcess.exe") {
+		world = mem.Read<uintptr_t>(game_base + 0x25C15B0);
+		replay = mem.Read<uintptr_t>(game_base + 0xA1690000);
+		viewport = mem.Read<uintptr_t>(game_base + 0x202DC50);
+		localplayer = mem.Read<uintptr_t>(world + 0x8);
+
+		playerInfo = 0x10A8;
+	}
 }
 
 void FiveM::ESP::RunESP()
