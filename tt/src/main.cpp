@@ -7,7 +7,7 @@ int main() {
 	//ShowWindow(GetConsoleWindow(), SW_HIDE);
 
 	Overlay overlay;
-	
+
 	overlay.SetupOverlay("gra");
 
 	FiveM::Setup();
@@ -19,14 +19,12 @@ int main() {
 
 	while (overlay.shouldRun) {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
-		overlay.StartRender(); 
+		overlay.StartRender();
 
-		FiveM::ESP::RunESP();
+		FiveM::ESP::RunESP(overlay.GetUI());
+		FiveM::ESP::RunTracer(overlay.GetUI());
 
-		if (overlay.RenderMenu)
-			overlay.Render();
-
+		// The menu is now rendered through the UI system
 		overlay.EndRender();
-
-}
+	}
 }

@@ -1,10 +1,13 @@
 #pragma once
 #include <d3d11.h>
-
-
 #include "../../ext/imGui 1.19.8/imgui.h"
 #include "../../ext/imGui 1.19.8/imgui_impl_dx11.h"
 #include "../../ext/imGui 1.19.8/imgui_impl_win32.h"
+#include "../ui/ui_base.hpp"
+#include "../ui/ui.h"
+
+// Forward declare UI class to avoid circular dependency
+class UI;
 
 class Overlay {
 private:
@@ -24,6 +27,7 @@ public:
 		CreateOverlay(window_name);
 		CreateDevice();
 		CreateImGui();
+		ui.Initialize(device, device_context, overlay);
 	}
 
 	// deconstructor called when program is exiting. THIS IS CALLED AUTOMATICALLY, NO NEED TO CALL IT YOURSELF!
@@ -33,9 +37,6 @@ public:
 		DestroyImGui();
 	}
 
-	// if we should render menu on top of the overlay.
-	bool RenderMenu;
-
 	// if we should run the overlay at all
 	bool shouldRun = true;
 
@@ -43,19 +44,16 @@ public:
 	void StartRender();
 	void EndRender();
 
-	// i'm using this for the menu specifically, but you could render ESP and shit like that in here if you wanted to.
-	// as long as you're calling ImGui::GetBackgroundDrawList() between Start and End render you're fine to do what you want :)
-	
-	// NOTE: if the user presses the x in the titlebar, the styles will not be set correctly. This can be fixed by checking the renderMenu bool every frame.
-	// (which is really bad for performance)
-	void Render();
-
 	// small helper functions for the SetForeground function
 	bool IsWindowInForeground(HWND window) { return GetForegroundWindow() == window; }
 	bool BringToForeground(HWND window) { return SetForegroundWindow(window); }
 
 	// sets the window to the foreground
 	void SetForeground(HWND window);
+
+	// UI access
+	UIBase& GetUI() { return ui; }
+
 private:
 	// winapi window requirements
 	HWND overlay;
@@ -65,4 +63,6 @@ private:
 	ID3D11DeviceContext* device_context;
 	IDXGISwapChain* swap_chain;
 	ID3D11RenderTargetView* render_targetview;
+
+	UI ui;
 };

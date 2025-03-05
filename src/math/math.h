@@ -1,4 +1,3 @@
-
 #pragma once
 #include <numbers>
 #include <cmath>
@@ -27,15 +26,28 @@ public:
 		x(x), y(y), z(z) {
 	}
 
-	constexpr const Vec3& operator-(const Vec3& other) const noexcept;
-	constexpr const Vec3& operator+(const Vec3& other) const noexcept;
-	constexpr const Vec3& operator/(const float factor) const noexcept;
-	constexpr const Vec3& operator*(const float factor) const noexcept;
+	constexpr Vec3 operator-(const Vec3& other) const noexcept {
+		return Vec3(x - other.x, y - other.y, z - other.z);
+	}
+
+	constexpr Vec3 operator+(const Vec3& other) const noexcept {
+		return Vec3(x + other.x, y + other.y, z + other.z);
+	}
+
+	constexpr Vec3 operator/(const float factor) const noexcept {
+		return Vec3(x / factor, y / factor, z / factor);
+	}
+
+	constexpr Vec3 operator*(const float factor) const noexcept {
+		return Vec3(x * factor, y * factor, z * factor);
+	}
 
 	// 3d -> 2d, explanations already exist.
 	const bool world_to_screen(const DirectX::SimpleMath::Matrix& view_matrix, Vec2& out);
 
-	const bool IsZero();	
+	const bool IsZero() {
+		return x == 0 && y == 0 && z == 0;
+	}
 
 	float x, y, z;
 };

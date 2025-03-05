@@ -2,6 +2,7 @@
 #include "game/game.h"
 #include <thread>
 #include <iostream>
+
 int main() {
 	//ShowWindow(GetConsoleWindow(), SW_HIDE);
 
@@ -20,12 +21,11 @@ int main() {
 		std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		overlay.StartRender(); 
 
-		FiveM::ESP::RunESP();
+		UI& ui = overlay.GetUI();
+		FiveM::ESP::RunESP(ui);
+		FiveM::ESP::RunTracer(ui);
 
-		if (overlay.RenderMenu)
-			overlay.Render();
-
+		// The menu is now rendered through the UI system
 		overlay.EndRender();
-
-}
+	}
 }

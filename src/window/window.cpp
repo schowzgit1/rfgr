@@ -1,5 +1,5 @@
 #include "window.hpp"
-
+#include "../ui/ui.hpp"
 #include <dwmapi.h>
 #include <stdio.h>
 
@@ -226,95 +226,62 @@ void Overlay::DestroyOverlay()
 
 bool Overlay::CreateImGui()
 {
-	ImGui::CreateContext();
-	ImGui::StyleColorsDark();
-
-	// Initalize ImGui for the Win32 library
-	if (!ImGui_ImplWin32_Init(overlay)) {
-		printf("[>>] Failed ImGui_ImplWin32_Init\n");
-		return false;
-	}
-	
-	// Initalize ImGui for DirectX 11.
-	if (!ImGui_ImplDX11_Init(device, device_context)) {
-		printf("[>>] Failed ImGui_ImplDX11_Init\n");
-		return false;
-	}
-
-	printf("[>>] ImGui Initialized\n");
+	// ImGui is now initialized in the UI class
 	return true;
 }
 
 void Overlay::DestroyImGui()
 {
-	// Cleanup ImGui by shutting down DirectX11, the Win32 Platform and Destroying the ImGui context.
-	ImGui_ImplDX11_Shutdown();
-	ImGui_ImplWin32_Shutdown();
-	ImGui::DestroyContext();
+	// ImGui is now cleaned up in the UI class
 }
 
 
 
 void Overlay::StartRender()
 {
-	// handle windows messages
-	MSG msg;
-	while (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) {
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-	}
-
-	// begin a new frame
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
-	
-	// if the user presses Insert then enable the menu.
+	// Handle menu toggle with Insert key
 	if (GetAsyncKeyState(VK_INSERT) & 1) {
-		RenderMenu = !RenderMenu;
-
-		// If we are rendering the menu set the window styles to be able to clicked on.
-		if (RenderMenu) {
+		ui.ToggleMenu();
+		
+		// Update window styles based on menu visibility
+		if (ui.IsMenuVisible()) {
 			SetWindowLong(overlay, GWL_EXSTYLE, WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT);
-		}
-		else {
+		} else {
 			SetWindowLong(overlay, GWL_EXSTYLE, WS_EX_TOOLWINDOW | WS_EX_TRANSPARENT | WS_EX_TOPMOST | WS_EX_LAYERED);
 		}
 	}
+
+	// Start the Dear ImGui frame
+	ui.BeginRender();
 }
 
 void Overlay::EndRender()
 {
-	// Render ImGui
-	ImGui::Render();
+	// Render the UI
+	ui.RenderMenu();
+	ui.EndRender();
 
-	// Make a color that's clear / transparent
-	float color[4]{ 0, 0, 0, 0 };
+	// Rendering
+	ImDrawData* draw_data = ImGui::GetDrawData();
+	if (draw_data)
+	{
+		// Clear the back buffer
+		float clear_color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		device_context->OMSetRenderTargets(1, &render_targetview, nullptr);
+		device_context->ClearRenderTargetView(render_targetview, clear_color);
 
-	// Set the render target and then clear it
-	device_context->OMSetRenderTargets(1, &render_targetview, nullptr);
-	device_context->ClearRenderTargetView(render_targetview, color);
+		// Render ImGui draw data
+		ImGui_ImplDX11_RenderDrawData(draw_data);
+	}
 
-	// Render ImGui draw data.
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
-	// Present rendered frame with V-Sync
-	swap_chain->Present(1U, 0U);
-
-	// Present rendered frame without V-Sync
-	//swap_chain->Present(0U, 0U);
-}
-
-void Overlay::Render()
-{
-	ImGui::SetNextWindowSize({ 250, 250 });
-	ImGui::Begin("cheat", &RenderMenu, ImGuiWindowFlags_NoSavedSettings | ImGuiWindowFlags_NoScrollbar);
-
-	ImGui::End();
+	// Present
+	swap_chain->Present(1, 0);
 }
 
 void Overlay::SetForeground(HWND window)
 {
-	if (!IsWindowInForeground(window))
-		BringToForeground(window);
+	if (IsWindowInForeground(window))
+		return;
+
+	BringToForeground(window);
 }

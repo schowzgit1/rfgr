@@ -120,6 +120,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -139,9 +141,12 @@
     <ClInclude Include="ext\imGui 1.19.8\imstb_textedit.h" />
     <ClInclude Include="ext\imGui 1.19.8\imstb_truetype.h" />
     <ClInclude Include="ext\SimpleMath.h" />
-    <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\math\math.h" />
+    <ClInclude Include="src\random\noclip.h" />
+    <ClInclude Include="src\game\game.h" />
     <ClInclude Include="src\mem\memify.h" />
+    <ClInclude Include="src\ui\ui.h" />
+    <ClInclude Include="src\ui\ui_base.hpp" />
     <ClInclude Include="src\window\window.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,13 +157,16 @@
     <ClCompile Include="ext\imGui 1.19.8\imgui_impl_win32.cpp" />
     <ClCompile Include="ext\imGui 1.19.8\imgui_tables.cpp" />
     <ClCompile Include="ext\imGui 1.19.8\imgui_widgets.cpp" />
+    <ClCompile Include="src\random\noclip.cpp" />
     <ClCompile Include="src\game\game.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\math\math.cpp" />
+    <ClCompile Include="src\ui\ui.cpp" />
     <ClCompile Include="src\window\window.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ext\SimpleMath.inl" />
+    <None Include="imgui.ini" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
